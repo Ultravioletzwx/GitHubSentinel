@@ -13,4 +13,6 @@ class GitHubClient:
             response = requests.get(f'https://api.github.com/repos/{repo}/releases/latest', headers=headers)
             if response.status_code == 200:
                 updates[repo] = response.json()
+            else:
+                print(f'Failed to fetch updates for {repo}')
         return updates
