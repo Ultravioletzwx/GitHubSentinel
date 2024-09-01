@@ -31,7 +31,7 @@ class GitHubClient:
         response.raise_for_status()  # 检查请求是否成功
         return response.json()  # 返回JSON格式的数据
 
-    def fetch_issues(self, repo, since=None, until=None):
+    def fetch_issues(self, repo, since=None, until=None): # github_issue_api 没有until，所以默认是since之后的所有issue返回
         url = f'https://api.github.com/repos/{repo}/issues'  # 构建获取问题的API URL
         params = {
             'state': 'closed',  # 仅获取已关闭的问题
