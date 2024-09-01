@@ -40,7 +40,7 @@ class GitHubClient:
         date_str = datetime.datetime.now().strftime('%Y-%m-%d')
         issues = self.fetch_issues(repo)
         pull_requests = self.fetch_pull_requests(repo)
-        filename = f'daily_progress/{repo.replace("/", "_")}_{date_str}.md'
+        filename = f'../daily_progress/{repo.replace("/", "_")}_{date_str}.md'
         with open(filename, 'w') as f:
             f.write(f"# {repo} Daily Progress - {date_str}\n\n")
             f.write("## Issues\n")

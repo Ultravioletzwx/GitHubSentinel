@@ -2,6 +2,8 @@
 
 import os
 from openai import OpenAI
+os.environ["http_proxy"] = "http://localhost:7890"
+os.environ["https_proxy"] = "http://localhost:7890"
 
 class LLM:
     def __init__(self):
@@ -16,7 +18,7 @@ class LLM:
 
         print("Before call GPT")
         response = self.client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini-2024-07-18",
             messages=[
                 {"role": "user", "content": prompt}
             ]
