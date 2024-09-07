@@ -17,7 +17,7 @@ start() {
     nohup python3 $DAEMON_PATH > $LOG_FILE 2>&1 &
     # 将守护进程的 PID 写入文件
     echo $! > $PID_FILE
-    echo "$DAEMON_NAME started."
+
 }
 
 # 停止守护进程的函数

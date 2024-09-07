@@ -6,15 +6,17 @@ from logger import LOG  # 导入日志模块
 class LLM:
     def __init__(self):
         # 创建一个OpenAI客户端实例
-        self.client = OpenAI()
+        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY_2"),base_url=os.getenv("base_url"))
         # 从TXT文件加载提示信息
         with open("prompts/report_prompt.txt", "r", encoding='utf-8') as file:
-            self.system_prompt = file.read()
+            self.github_prompt = file.read()
+        with open("prompts/hacker_prompt.txt", "r", encoding='utf-8') as file:
+            self.hacker_prompt = file.read()
 
-    def generate_daily_report(self, markdown_content, dry_run=False):
+    def generate_daily_report(self, markdown_content, dry_run=False,source_type='github'):
         # 使用从TXT文件加载的提示信息
         messages = [
-            {"role": "system", "content": self.system_prompt},
+            {"role": "system", "content": self.github_prompt if source_type == 'github' else self.hacker_prompt},
             {"role": "user", "content": markdown_content},
         ]
 
