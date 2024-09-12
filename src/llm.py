@@ -1,6 +1,8 @@
 import json
 import requests
 from logger import LOG  # 导入日志模块
+import os
+
 
 class LLM:
     def __init__(self, config):
@@ -13,17 +15,19 @@ class LLM:
         self.model = config.llm_model_type.lower()  # 获取模型类型并转换为小写
         if self.model == "openai":
             from openai import OpenAI  # 导入OpenAI库用于访问GPT模型
-            self.client = OpenAI()  # 创建OpenAI客户端实例
+            self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY_2"), base_url=os.getenv("base_url"))  # 创建OpenAI客户端实例
         elif self.model == "ollama":
             self.api_url = config.ollama_api_url  # 设置Ollama API的URL
         else:
             raise ValueError(f"Unsupported model type: {self.model}")  # 如果模型类型不支持，抛出错误
-        
-        # 从TXT文件加载系统提示信息
-        with open("prompts/report_prompt.txt", "r", encoding='utf-8') as file:
-            self.system_prompt = file.read()
 
-    def generate_daily_report(self, markdown_content, dry_run=False):
+        # 从TXT文件加载系统提示信息
+        with open("prompts/github_prompt.txt", "r", encoding='utf-8') as file:
+            self.github_prompt = file.read()
+        with open("prompts/hacker_prompt.txt", "r", encoding='utf-8') as file:
+            self.hacker_prompt = file.read()
+
+    def generate_daily_report(self, markdown_content, dry_run=False,source_type='github'):
         """
         生成每日报告，根据配置选择不同的模型来处理请求。
         
@@ -33,7 +37,7 @@ class LLM:
         """
         # 准备消息列表，包含系统提示和用户内容
         messages = [
-            {"role": "system", "content": self.system_prompt},
+            {"role": "system", "content": self.github_prompt if source_type == 'github' else self.hacker_prompt},
             {"role": "user", "content": markdown_content},
         ]
 
@@ -88,10 +92,10 @@ class LLM:
             }
             response = requests.post(self.api_url, json=payload)  # 发送POST请求到Ollama API
             response_data = response.json()
-            
+
             # 调试输出查看完整的响应结构
             LOG.debug("Ollama response: {}", response_data)
-            
+
             # 直接从响应数据中获取 content
             message_content = response_data.get("message", {}).get("content", None)
             if message_content:
@@ -106,10 +110,11 @@ class LLM:
 
 if __name__ == '__main__':
     from config import Config  # 导入配置管理类
+
     config = Config()
     llm = LLM(config)
 
-    markdown_content="""
+    markdown_content = """
 # Progress for langchain-ai/langchain (2024-08-20 to 2024-08-21)
 
 

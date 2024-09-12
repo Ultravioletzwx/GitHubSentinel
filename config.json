@@ -1,11 +1,11 @@
 {
-    "github_token": "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",
+    "github_token": "xxx",
     "email":  {
-        "smtp_server": "smtp.exmail.qq.com",
+        "smtp_server": "smtp.qq.com",
         "smtp_port": 465,
-        "from": "pjt@zaijidata.com",
+        "from": "examp7897@qq.com",
         "password": "",
-        "to": "test@zaijidata.com"
+        "to": "zwx1472415893@163.com"
     },
     "slack_webhook_url": "your_slack_webhook_url",
     "subscriptions_file": "subscriptions.json",
@@ -14,7 +14,7 @@
     "llm": {
         "model_type": "ollama",
         "openai_model_name": "gpt-4o-mini",
-        "ollama_model_name": "llama3",
+        "ollama_model_name": "llama3.1:8b ",
         "ollama_api_url": "http://localhost:11434/api/chat"
     }
 }
