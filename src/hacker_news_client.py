@@ -3,7 +3,10 @@ from bs4 import BeautifulSoup  # 导入BeautifulSoup库用于解析HTML内容
 from datetime import datetime  # 导入datetime模块用于获取日期和时间
 import os  # 导入os模块用于文件和目录操作
 from logger import LOG  # 导入日志模块
-
+proxies = {
+  "http": "http://127.0.0.1:7890",
+  "https": "http://127.0.0.1:7890",
+}
 class HackerNewsClient:
     def __init__(self):
         self.url = 'https://news.ycombinator.com/'  # Hacker News的URL
@@ -11,7 +14,7 @@ class HackerNewsClient:
     def fetch_top_stories(self):
         LOG.debug("准备获取Hacker News的热门新闻。")
         try:
-            response = requests.get(self.url, timeout=10)
+            response = requests.get(self.url, timeout=10, proxies=proxies)
             response.raise_for_status()  # 检查请求是否成功
             top_stories = self.parse_stories(response.text)  # 解析新闻数据
             return top_stories

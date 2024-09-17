@@ -10,7 +10,7 @@ class Config:
             config = json.load(f)
             
             self.email = config.get('email', {})
-            self.email['password'] = os.getenv('EMAIL_PASSWORD', self.email.get('password', ''))
+            self.email['password'] = os.getenv('QQEMAIL_PASSWORD', self.email.get('password', ''))
 
             # 加载 GitHub 相关配置
             github_config = config.get('github', {})
@@ -23,11 +23,11 @@ class Config:
             llm_config = config.get('llm', {})
             self.llm_model_type = llm_config.get('model_type', 'openai')
             self.openai_model_name = llm_config.get('openai_model_name', 'gpt-4o-mini')
-            self.ollama_model_name = llm_config.get('ollama_model_name', 'llama3')
+            self.ollama_model_name = llm_config.get('ollama_model_name', 'llama3.1:8b')
             self.ollama_api_url = llm_config.get('ollama_api_url', 'http://localhost:11434/api/chat')
             
             # 加载报告类型配置
-            self.report_types = config.get('report_types', ["github", "hacker_news"])  # 默认报告类型
+            self.report_types = config.get('report_types', ["github"])  # 默认报告类型
             
             # 加载 Slack 配置
             slack_config = config.get('slack', {})

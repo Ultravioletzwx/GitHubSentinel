@@ -31,6 +31,18 @@ class Notifier:
             self.send_email(subject, report)
         else:
             LOG.warning("邮件设置未配置正确，无法发送 Hacker News 报告通知")
+
+    def notify_towardsdatascience_report(self, date, report,section_name):
+        """
+        发送 TowardsDataScience 博客文章邮件
+        :param date: 报告日期
+        :param report: 报告内容
+        """
+        if self.email_settings:
+            subject = f"[TowardsDataScience] {section_name} {date}"
+            self.send_email(subject, report)
+        else:
+            LOG.warning("邮件设置未配置正确，无法发送 TowardsDataScience 报告通知")
     
     def send_email(self, subject, report):
         LOG.info(f"准备发送邮件:{subject}")

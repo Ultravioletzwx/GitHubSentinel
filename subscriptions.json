@@ -1,4 +1,5 @@
 [
     "ollama/ollama",
-    "vllm-project/vllm"
+    "WangRongsheng/awesome-LLM-resourses",
+    "langchain-ai/langchain"
 ]
