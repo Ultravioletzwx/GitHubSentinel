@@ -19,3 +19,7 @@
 ### 3. 生产力与工具
    - 效率提升和工具使用是每个数据科学家关注的重点。
    - 热门文章包括「[Creating Project Environments in Python with VSCode](https://towardsdatascience.com/creating-project-environments-in-python-with-vscode)」以及「[A Powerful Feature for Boosting Python Code Efficiency](https://towardsdatascience.com/a-powerful-feature-for-boosting-python-code-efficiency)」。
+
+
+注意：
+报告使用中文回复！！！

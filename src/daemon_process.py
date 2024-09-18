@@ -36,8 +36,23 @@ def github_job(subscription_manager, github_client, report_generator, notifier, 
 
 def hn_topic_job(hacker_news_client, report_generator):
     LOG.info("[开始执行定时任务]Hacker News 热点话题跟踪")
-    markdown_file_path = hacker_news_client.export_top_stories()
-    _, _ = report_generator.generate_hn_topic_report(markdown_file_path)
+    markdown_file_path = None
+
+    try:
+        # 导出顶级故事到Markdown文件
+        markdown_file_path = hacker_news_client.export_top_stories()
+    except Exception as e:
+        LOG.error(f"导出Hacker News热门话题失败，错误信息：{str(e)}")
+
+    if markdown_file_path:
+        try:
+            # 生成报告
+            _, _ = report_generator.generate_hn_topic_report(markdown_file_path)
+        except Exception as e:
+            LOG.error(f"生成热点话题报告失败，错误信息：{str(e)}")
+    else:
+        LOG.warning(f"由于未能成功导出热门话题，热点话题报告未生成。")
+
     LOG.info(f"[定时任务执行完毕]")
 
 
@@ -54,16 +69,34 @@ def hn_daily_job(hacker_news_client, report_generator, notifier):
 
 def towardsdatascience_job(towardsDS_client, report_generator,notifier,section_name):
     LOG.info(f"[开始执行定时任务]Towards Data Science {section_name}文章")
-    # 获取当前日期，并格式化为 'YYYY-MM-DD' 格式
+    # 初始化变量
+    markdown_file_path = None
     date = datetime.now().strftime('%Y-%m-%d')
+
     try:
+        # 设置驱动及获取文章
         towardsDS_client.driver = towardsDS_client.setup_driver()
         latest_articles = towardsDS_client.get_articles(section_name, min_count=30)
+        # 导出文章到markdown
         markdown_file_path = towardsDS_client.export_to_markdown(latest_articles, section_name)
+    except Exception as e:
+        LOG.error(f"获取 Towards Data Science {section_name}文章失败，错误信息：{str(e)}")
     finally:
+        # 关闭驱动
         towardsDS_client.close()
-    report, _ = report_generator.generate_towardsdatascience_report(markdown_file_path)
-    notifier.notify_towardsdatascience_report(date, report,section_name)
+
+        # 检查markdown文件路径是否有效
+        if markdown_file_path:
+            try:
+                # 生成报告
+                report, _ = report_generator.generate_towardsdatascience_report(markdown_file_path)
+                # 发送通知
+                notifier.notify_towardsdatascience_report(date, report, section_name)
+            except Exception as e:
+                LOG.error(f"生成报告或发送通知失败，错误信息：{str(e)}")
+        else:
+            LOG.warning(f"由于未成功获取文章，未生成报告和通知。")
+
     LOG.info(f"[定时任务执行完毕]")
 
 
@@ -81,9 +114,9 @@ def main():
     subscription_manager = SubscriptionManager(config.subscriptions_file)  # 创建订阅管理器实例
 
     # 启动时立即执行（如不需要可注释）
-    github_job(subscription_manager, github_client, report_generator, notifier, config.freq_days)
-    # hn_topic_job(hacker_news_client, report_generator)
-    # hn_daily_job(hacker_news_client, report_generator, notifier)
+    # github_job(subscription_manager, github_client, report_generator, notifier, config.freq_days)
+    hn_topic_job(hacker_news_client, report_generator)
+    hn_daily_job(hacker_news_client, report_generator, notifier)
     towardsdatascience_job(towardsDS_client, report_generator, notifier,'latest')
     towardsdatascience_job(towardsDS_client, report_generator, notifier,'trending')
 

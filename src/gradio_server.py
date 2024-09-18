@@ -162,7 +162,7 @@ with gr.Blocks(title="GitHubSentinel") as demo:
                      outputs=[markdown_output, file_output])
 
 if __name__ == "__main__":
-    demo.launch(share=True,server_name='0.0.0.0')  # 启动界面并设置为公共可访问
-    # demo.launch(share=True)  # 启动界面并设置为公共可访问
+    # demo.launch(share=True,server_name='0.0.0.0')  # 启动界面并设置为公共可访问
+    demo.launch(share=True)  # 启动界面并设置为公共可访问
     # 可选带有用户认证的启动方式
     # demo.launch(share=True, server_name="0.0.0.0", auth=("django", "1234"))

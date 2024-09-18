@@ -77,7 +77,6 @@ class LLM:
                 "temperature": 0.7,
                 "stream": False
             }
-
             response = requests.post(self.api_url, json=payload)  # 发送POST请求到Ollama API
             response_data = response.json()
 
